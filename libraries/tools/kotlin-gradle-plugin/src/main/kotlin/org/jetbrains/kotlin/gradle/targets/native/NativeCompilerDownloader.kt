@@ -96,10 +96,19 @@ class NativeCompilerDownloader(
     }
 
     private fun downloadAndExtract() {
+        /**
+         * Once we've decide to make K/N version like K one (with droppable maintenance 0), but this breaks old publications.
+         */
+        val versionStringRepresentation =
+            compilerVersion.toString(
+                compilerVersion.meta != MetaVersion.RELEASE,
+                compilerVersion.meta != MetaVersion.RELEASE,
+                true
+            )
         val repoUrl = buildString {
             append("$BASE_DOWNLOAD_URL/")
             append(if (compilerVersion.meta == MetaVersion.DEV) "dev/" else "releases/")
-            append("$compilerVersion/")
+            append("$versionStringRepresentation/")
             append(simpleOsName)
         }
         val dependencyUrl = "$repoUrl/$dependencyFileName"
@@ -109,7 +118,7 @@ class NativeCompilerDownloader(
         val compilerDependency = project.dependencies.create(
             mapOf(
                 "name" to dependencyName,
-                "version" to compilerVersion.toString(),
+                "version" to versionStringRepresentation,
                 "ext" to archiveExtension
             )
         )

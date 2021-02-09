@@ -15,7 +15,7 @@ interface CompilerVersion : Serializable {
     val milestone: Int
     val build: Int
 
-    fun toString(showMeta: Boolean, showBuild: Boolean): String
+    fun toString(showMeta: Boolean, showBuild: Boolean, oldStyle:Boolean = false): String
 
     companion object {
         // major.minor.patch-meta-build where patch, meta and build are optional.
@@ -49,12 +49,14 @@ data class CompilerVersionImpl(
     override val build: Int = -1
 ) : CompilerVersion {
 
-    override fun toString(showMeta: Boolean, showBuild: Boolean) = buildString {
+    override fun toString(showMeta: Boolean, showBuild: Boolean, oldStyle: Boolean) = buildString {
         append(major)
         append('.')
         append(minor)
-        append('.')
-        append(maintenance)
+        if (!oldStyle || maintenance != 0) {
+            append('.')
+            append(maintenance)
+        }
         if (milestone != -1) {
             append("-M")
             append(milestone)
